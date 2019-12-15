@@ -34,12 +34,12 @@ def report_crash(node, traceback=None, hostname=None):
         traceback += """
 
 When creating this crashfile, the results file corresponding
-to the node could not be found.""".splitlines(keepends=True)
+to the node could not be found.""".splitlines(True)
     except Exception as exc:
         traceback += """
 
 During the creation of this crashfile triggered by the above exception,
-another exception occurred:\n\n{}.""".format(exc).splitlines(keepends=True)
+another exception occurred:\n\n{}.""".format(exc).splitlines(True)
     else:
         if getattr(result, 'runtime', None):
             if isinstance(result.runtime, list):
