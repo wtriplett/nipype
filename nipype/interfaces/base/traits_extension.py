@@ -23,7 +23,7 @@ from __future__ import (print_function, division, unicode_literals,
                         absolute_import)
 
 from builtins import str, bytes
-from collections import Sequence
+from collections.abc import Sequence
 
 # perform all external trait imports here
 from traits import __version__ as traits_version

@@ -10,7 +10,7 @@ from builtins import next, bytes, str
 import os
 import sys
 import re
-from collections import Iterator
+from collections.abc import Iterator
 from warnings import warn
 
 from distutils.version import LooseVersion
@@ -42,7 +42,7 @@ def human_order_sorted(l):
     def natural_keys(text):
         if isinstance(text, tuple):
             text = text[0]
-        return [atoi(c) for c in re.split('(\d+)', text)]
+        return [atoi(c) for c in re.split(r'(\d+)', text)]
 
     return sorted(l, key=natural_keys)
 
