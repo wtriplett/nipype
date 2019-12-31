@@ -192,8 +192,9 @@ class DataSinkInputSpec(DynamicTraitedSpec, BaseInterfaceInputSpec):
     '''
 
     # Init inputspec data attributes
-    base_directory = Directory(
-        desc='Path to the base directory for storing data.')
+    base_directory = Str(
+        desc='Path to the base directory for a properly formed S3 '
+             'URL for storing data.')
     container = Str(
         desc='Folder within base directory in which to store output')
     parameterization = traits.Bool(
