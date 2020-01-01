@@ -69,11 +69,13 @@ def run_node(node, updatehash, taskid):
         result['result'] = node.run(updatehash=updatehash)
     except:  # noqa: E722, intendedly catch all here
         result['traceback'] = format_exception(*sys.exc_info())
-        # If this is not commented out, there can be weird hangs under multiproc
-        # when some nodes throw exceptions.
-        # result['result'] = node.result
+        try:
+            result['result'] = node.result
+        except FileNotFoundError:
+            result['traceback'] += """
+        Additionally, the results file corresponding
+        to the node could not be found.""".splitlines(keepends=True)
 
-    # Return the result dictionary
     return result
 
 
