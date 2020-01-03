@@ -194,8 +194,8 @@ class Node(EngineBase):
     @property
     def result(self):
         """Get result from result file (do not hold it in memory)"""
-        return _load_resultfile(
-            op.join(self.output_dir(), 'result_%s.pklz' % self.name))
+        result_file = op.join(self.output_dir(), 'result_%s.pklz' % self.name)
+        return _load_resultfile(result_file)
 
     @property
     def inputs(self):
@@ -677,7 +677,7 @@ Error populating the inputs of node "%s": the results file of the source node \
         try:
             result = self._interface.run(cwd=outdir)
         except Exception as msg:
-            result.runtime.stderr = '%s\n\n%s'.format(
+            result.runtime.stderr = '{}\n\n{}'.format(
                 getattr(result.runtime, 'stderr', ''), msg)
             _save_resultfile(
                 result, outdir, self.name,
@@ -1210,6 +1210,8 @@ class MapNode(Node):
                                                    self.iterfield[0])))
                 setattr(finalresult.outputs, key, values)
 
+        _save_resultfile(finalresult, self.output_dir(), self.name, rebase=False)
+
         if returncode and any([code is not None for code in returncode]):
             msg = []
             for i, code in enumerate(returncode):
@@ -1296,8 +1298,7 @@ class MapNode(Node):
                 updatehash=updatehash,
                 stop_first=str2bool(
                     self.config['execution']['stop_on_first_crash'])))
-        # And store results
-        _save_resultfile(result, cwd, self.name, rebase=False)
+
         # remove any node directories no longer required
         dirs2remove = []
         for path in glob(op.join(cwd, 'mapflow', '*')):

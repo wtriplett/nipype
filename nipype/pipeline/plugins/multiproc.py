@@ -73,8 +73,8 @@ def run_node(node, updatehash, taskid):
             result['result'] = node.result
         except FileNotFoundError:
             result['traceback'] += """
-        Additionally, the results file corresponding
-        to the node could not be found.""".splitlines(keepends=True)
+Additionally, the results file corresponding
+to the node could not be found.""".splitlines(keepends=True)
 
     return result
 
