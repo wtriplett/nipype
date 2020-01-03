@@ -5,18 +5,12 @@
 Module to draw an html gantt chart from logfile produced by
 ``nipype.utils.profiler.log_nodes_cb()``
 """
-from __future__ import (print_function, division, unicode_literals,
-                        absolute_import)
 
 # Import packages
 import sys
 import random
 import datetime
 import simplejson as json
-from builtins import str, range, open
-# Py2 compat: http://python-future.org/compatible_idioms.html#collections-counter-and-ordereddict
-from future import standard_library
-standard_library.install_aliases()
 from collections import OrderedDict
 
 # Pandas
@@ -31,7 +25,7 @@ PY3 = sys.version_info[0] > 2
 
 
 def create_event_dict(start_time, nodes_list):
-    '''
+    """
     Function to generate a dictionary of event (start/finish) nodes
     from the nodes list
 
@@ -47,7 +41,7 @@ def create_event_dict(start_time, nodes_list):
     events : dictionary
         a dictionary where the key is the timedelta from the start of
         the pipeline execution to the value node it accompanies
-    '''
+    """
 
     # Import packages
     import copy
@@ -86,7 +80,7 @@ def create_event_dict(start_time, nodes_list):
 
 
 def log_to_dict(logfile):
-    '''
+    """
     Function to extract log node dictionaries into a list of python
     dictionaries and return the list as well as the final node
 
@@ -101,7 +95,7 @@ def log_to_dict(logfile):
     nodes_list : list
         a list of python dictionaries containing the runtime info
         for each nipype node
-    '''
+    """
 
     # Init variables
     with open(logfile, 'r') as content:
@@ -115,7 +109,7 @@ def log_to_dict(logfile):
 
 
 def calculate_resource_timeseries(events, resource):
-    '''
+    """
     Given as event dictionary, calculate the resources used
     as a timeseries
 
@@ -133,7 +127,7 @@ def calculate_resource_timeseries(events, resource):
     time_series : pandas Series
         a pandas Series object that contains timestamps as the indices
         and the resource amount as values
-    '''
+    """
 
     # Import packages
     import pandas as pd
@@ -152,6 +146,8 @@ def calculate_resource_timeseries(events, resource):
             if resource in event and event[resource] != 'Unknown':
                 all_res -= float(event[resource])
             current_time = event['finish']
+        else:
+            continue
         res[current_time] = all_res
 
     # Formulate the pandas timeseries
@@ -165,7 +161,7 @@ def calculate_resource_timeseries(events, resource):
 
 
 def draw_lines(start, total_duration, minute_scale, scale):
-    '''
+    """
     Function to draw the minute line markers and timestamps
 
     Parameters
@@ -186,7 +182,7 @@ def draw_lines(start, total_duration, minute_scale, scale):
     result : string
         the html-formatted string for producing the minutes-based
         time line markers
-    '''
+    """
 
     # Init variables
     result = ''
@@ -213,7 +209,7 @@ def draw_lines(start, total_duration, minute_scale, scale):
 
 def draw_nodes(start, nodes_list, cores, minute_scale, space_between_minutes,
                colors):
-    '''
+    """
     Function to return the html-string of the node drawings for the
     gantt chart
 
@@ -226,8 +222,6 @@ def draw_nodes(start, nodes_list, cores, minute_scale, space_between_minutes,
     cores : integer
         the number of cores given to the workflow via the 'n_procs'
         plugin arg
-    total_duration : float
-        total duration of the workflow execution (in seconds)
     minute_scale : integer
         the scale, in minutes, at which to plot line markers for the
         gantt chart; for example, minute_scale=10 means there are lines
@@ -243,7 +237,7 @@ def draw_nodes(start, nodes_list, cores, minute_scale, space_between_minutes,
     result : string
         the html-formatted string for producing the minutes-based
         time line markers
-    '''
+    """
 
     # Init variables
     result = ''
@@ -251,7 +245,7 @@ def draw_nodes(start, nodes_list, cores, minute_scale, space_between_minutes,
     space_between_minutes = space_between_minutes / scale
     end_times = [
         datetime.datetime(start.year, start.month, start.day, start.hour,
-                          start.minute, start.second) for core in range(cores)
+                          start.minute, start.second) for _ in range(cores)
     ]
 
     # For each node in the pipeline
@@ -311,8 +305,8 @@ def draw_nodes(start, nodes_list, cores, minute_scale, space_between_minutes,
 def draw_resource_bar(start_time, finish_time, time_series,
                       space_between_minutes, minute_scale, color, left,
                       resource):
-    '''
-    '''
+    """
+    """
 
     # Memory header
     result = "<p class='time' style='top:198px;left:%dpx;'>%s</p>" \
@@ -380,8 +374,8 @@ def generate_gantt_chart(logfile,
                          cores,
                          minute_scale=10,
                          space_between_minutes=50,
-                         colors=["#7070FF", "#4E4EB2", "#2D2D66", "#9B9BFF"]):
-    '''
+                         colors=("#7070FF", "#4E4EB2", "#2D2D66", "#9B9BFF")):
+    """
     Generates a gantt chart in html showing the workflow execution based on a callback log file.
     This script was intended to be used with the MultiprocPlugin.
     The following code shows how to set up the workflow in order to generate the log file:
@@ -429,10 +423,10 @@ def generate_gantt_chart(logfile,
     #     plugin_args={'n_procs':8, 'memory':12, 'status_callback': log_nodes_cb})
 
     # generate_gantt_chart('callback.log', 8)
-    '''
+    """
 
     # add the html header
-    html_string = '''<!DOCTYPE html>
+    html_string = """<!DOCTYPE html>
     <head>
         <style>
             #content{
@@ -487,16 +481,16 @@ def generate_gantt_chart(logfile,
     <body>
         <div id="content">
             <div style="display:inline-block;">
-    '''
+    """
 
-    close_header = '''
+    close_header = """
     </div>
     <div style="display:inline-block;margin-left:60px;vertical-align: top;">
         <p><span><div class="label" style="background-color:#90BBD7;"></div> Estimated Resource</span></p>
         <p><span><div class="label" style="background-color:#03969D;"></div> Actual Resource</span></p>
         <p><span><div class="label" style="background-color:#f00;"></div> Failed Node</span></p>
     </div>
-    '''
+    """
 
     # Read in json-log to get list of node dicts
     nodes_list = log_to_dict(logfile)
@@ -556,9 +550,9 @@ def generate_gantt_chart(logfile,
                                      'Threads')
 
     # finish html
-    html_string += '''
+    html_string += """
         </div>
-    </body>'''
+    </body>"""
 
     # save file
     with open(logfile + '.html', 'w' if PY3 else 'wb') as html_file:

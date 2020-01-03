@@ -3,7 +3,6 @@
 # vi: set ft=python sts=4 ts=4 sw=4 et:
 """Miscellaneous file manipulation functions
 """
-from __future__ import print_function, division, unicode_literals, absolute_import
 
 import sys
 import pickle
@@ -22,13 +21,8 @@ import posixpath
 import simplejson as json
 from time import sleep, time
 
-from builtins import str, bytes, open
-
 from .. import logging, config, __version__ as version
 from .misc import is_container
-from future import standard_library
-
-standard_library.install_aliases()
 
 fmlogger = logging.getLogger("nipype.utils")
 
@@ -64,7 +58,6 @@ try:
     from pathlib import Path
 except ImportError:
     from pathlib2 import Path
-
     USING_PATHLIB2 = True
 
 

@@ -9,8 +9,6 @@ hash_method : content, timestamp
 
 @author: Chris Filo Gorgolewski
 '''
-from __future__ import (print_function, division, unicode_literals,
-                        absolute_import)
 import os
 import sys
 import errno
@@ -20,14 +18,10 @@ from distutils.version import LooseVersion
 import configparser
 import numpy as np
 
-from builtins import bytes, str, object, open
 from simplejson import load, dump
-from future import standard_library
 
 from .misc import str2bool
 from filelock import SoftFileLock
-
-standard_library.install_aliases()
 
 CONFIG_DEPRECATIONS = {
     'profile_runtime': ('monitoring.enabled', '1.0'),
@@ -143,7 +137,7 @@ class NipypeConfig(object):
             self._config.read_string(default_cfg)  # Python >= 3.2
         except AttributeError:
             from io import StringIO
-            self._config.readfp(StringIO(default_cfg))
+            self._config.read_file(StringIO(default_cfg))
 
     def enable_debug_mode(self):
         """Enables debug configuration"""

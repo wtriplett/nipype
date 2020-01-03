@@ -12,11 +12,6 @@ The I/O specifications corresponding to these base
 interfaces are found in the ``specs`` module.
 
 """
-from __future__ import (print_function, division, unicode_literals,
-                        absolute_import)
-
-from builtins import object, open, str, bytes
-
 from copy import deepcopy
 from datetime import datetime as dt
 import os
@@ -26,7 +21,6 @@ import shlex
 import sys
 import simplejson as json
 from dateutil.parser import parse as parseutc
-from future import standard_library
 from traits.trait_errors import TraitError
 
 from ... import config, logging, LooseVersion
@@ -44,8 +38,6 @@ from .specs import (BaseInterfaceInputSpec, CommandLineInputSpec,
                     get_filecopy_info)
 from .support import (Bunch, InterfaceResult, NipypeInterfaceError,
                       format_help)
-
-standard_library.install_aliases()
 
 iflogger = logging.getLogger('nipype.interface')
 
