@@ -6,6 +6,10 @@
 Support for child processes running as non-daemons based on
 http://stackoverflow.com/a/8963618/1183453
 """
+from __future__ import (print_function, division, unicode_literals,
+                        absolute_import)
+
+# Import packages
 import os
 import multiprocessing as mp
 from concurrent.futures import ProcessPoolExecutor
@@ -65,13 +69,9 @@ def run_node(node, updatehash, taskid):
         result['result'] = node.run(updatehash=updatehash)
     except:  # noqa: E722, intendedly catch all here
         result['traceback'] = format_exception(*sys.exc_info())
-        try:
-            result['result'] = node.result
-        except FileNotFoundError:
-            result['traceback'] += """
-Additionally, the results file corresponding
-to the node could not be found.""".splitlines(keepends=True)
+        result['result'] = node.result
 
+    # Return the result dictionary
     return result
 
 
